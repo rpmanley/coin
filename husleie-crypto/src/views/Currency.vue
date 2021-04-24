@@ -1,11 +1,14 @@
 <template>
   <div class="currency-list">
     <div v-if="getCurrencyById(pageId)">
+    <p>Historical data</p>
       <dl>
         <div v-for="(detail, index) in getCurrencyById(pageId)" :key="index"  class="currency-list__item">
           <dt class="currency-list__item-title">{{index}}</dt>
           <dd>{{detail}}</dd>
         </div>
+
+        <img :src="getIconById(pageId)" />
       </dl>
     </div>
     <div v-else>
@@ -16,7 +19,7 @@
 
 <script>
 
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   data () {
@@ -24,10 +27,21 @@ export default {
         pageId: this.$route.params.id
     }
   },
+  methods: {
+    ...mapActions([
+      'getSymbol'
+    ]),
+  },
   computed: {
     ...mapGetters ([
-      'getCurrencyById'
+      'getCurrencyById',
+      'getIconById'
     ])
+  },
+  mounted() {
+    this.getSymbol({
+        exchange_id: this.pageId
+    })
   }
 }
 </script>

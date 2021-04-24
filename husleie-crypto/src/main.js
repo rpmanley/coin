@@ -9,10 +9,13 @@ new Vue({
   router,
   store,
   async beforeCreate() {
+    store.dispatch('getIcons')
     await store.dispatch('getCurrencies')
     .then(() => {
       console.log('*** lazy loading the currencies? ***');
       console.log('*** styling ***');
+      
+
       this.$mount('#app')
     })
     .catch((error) => {

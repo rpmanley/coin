@@ -9,39 +9,21 @@ export default new Vuex.Store({
   state: {
     currencyList: {},
     recordLimit: 20,
-    // isWaiting: true
+    icons: null
   },
   mutations: {
     setCurrencyData(state, payload) {
         state.currencyList = { ...payload };
     },
-    // updateWaitingStatus(state, payload) {
-    //   state.isWaiting = payload;
-    // }
+    setIcons(state, payload) {
+      state.icons = { ...payload };
+    }
   },
   actions: {
-    // try catch
       getCurrencies({ commit, state }) { 
-
-        /*
-        return axios.get(apis.coins.path, {
-            headers: {
-              'X-CoinAPI-Key': apis.coins.key              }
-            })
-              .then(response => {
-              let data = (response && response.data ) ? { ...response.data } : {};
-              commit('setCurrencyData', data );
-              commit('updateWaitingStatus', false );
-          });
-          */
-
           axios({
-            method: 'get', //you can set what request you want to be
-            url: apis.coins.path,
-            // params: {
-            //   limit: 9,
-            //   // filter_symbol_id: ['BITSTAMP_SPOT_BTC_USD']
-            // },
+            method: 'get',
+            url: apis.coins.exchange.path,
             headers: {
               'X-CoinAPI-Key': apis.coins.key
             }
@@ -51,19 +33,51 @@ export default new Vuex.Store({
                 sorted = Object.values(data)
                           .sort((a, b) => a.volume_1day_usd - b.volume_1day_usd)
                           .filter((z,i) => i > Object.keys(data).length - state.recordLimit )
-                          .reverse();
+                          .reverse();             
 
-                          // console.log('keys ',Object.keys(data).length);
-                          
-               console.log('sorted -> ', sorted );
                commit('setCurrencyData', sorted );
-               // commit('updateWaitingStatus', false );
           });
-
-
-
-
-      }
+      },
+      getIcons({commit}) { 
+        console.log('state ' , ' ',apis.coins.exchange.symbol );
+        return axios({
+          method: 'get',
+          url: apis.coins.icons.path,
+          headers: {
+            'X-CoinAPI-Key': apis.coins.key
+          }
+        })
+        .then(response => {
+          console.log('response', response );
+            let data = (response && response.data ) ? { ...response.data } : {};
+            //   sorted = Object.values(data)
+            //             .sort((a, b) => a.volume_1day_usd - b.volume_1day_usd)
+            //             .filter((z,i) => i > Object.keys(data).length - state.recordLimit )
+            commit('setIcons', data );
+        });
+      },
+      getSymbol({commit},payload) { 
+        // console.log('state ',  payload , ' ',apis.coins.exchange.symbol );
+        axios({
+          method: 'get',
+          url: apis.coins.symbol.path + payload.exchange_id,
+          params: {
+              limit: 20,
+              time_end: '2016-01-01T00:00:00'
+          },
+          headers: {
+            'X-CoinAPI-Key': apis.coins.key
+          }
+        })
+        .then(response => {
+          console.log('response', response );
+            //  let data = (response && response.data ) ? { ...response.data } : {},
+            //   sorted = Object.values(data)
+            //             .sort((a, b) => a.volume_1day_usd - b.volume_1day_usd)
+            //             .filter((z,i) => i > Object.keys(data).length - state.recordLimit )
+            commit('setCurrencyData');
+        });
+    }
   },
   getters: {
     getMostPopularCurrencies: (state) => (id) => {
@@ -79,6 +93,16 @@ export default new Vuex.Store({
         let currency = state.currencyList[key];
         if(currency.exchange_id == id) { 
           return currency 
+        }
+      }
+    },
+    getIconById: (state) => (id) => {
+      for (let key of Object.keys(state.icons)) {
+        let currency = state.icons[key];
+
+        if(currency.exchange_id == id) { 
+          console.log('STORE getIconById ', currency );
+          return currency.url 
         }
       }
     }
