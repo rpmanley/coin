@@ -1,10 +1,7 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-    
     <ul v-for="currency in currencyList" :key="currency.exchange_id">
-      <li style="border: 2px dotted red;">
-
+      <li>
         <router-link :to="{ path: 'Currency/' + currency.exchange_id }">{{currency.name}}</router-link>
       </li>
     </ul>
@@ -17,9 +14,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Crytpo',
-  props: {
-    msg: String
-  },
   computed: mapState({
       currencyList: state => state.currencyList
   })

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Currency from '../views/Currency.vue'
+import NotFound from '../views/NotFound.vue'
 import Home from '../views/Home.vue'
 
 Vue.use(VueRouter)
@@ -12,7 +13,13 @@ const routes = [
     component: Home
   },
   { 
-    path: '/currency/:id', component: Currency 
+    path: '/currency/:id', 
+    component: Currency 
+  },
+  {
+    // will match everything
+    path: '*',
+    component: NotFound 
   }
   // {
   //   path: '/about',
