@@ -11,7 +11,8 @@ new Vue({
   async beforeCreate() {
     await store.dispatch('getCurrencies')
     .then(() => {
-      console.log('*** re-write this ***');
+      console.log('*** lazy loading the currencies? ***');
+      console.log('*** styling ***');
       this.$mount('#app')
     })
     .catch((error) => {
