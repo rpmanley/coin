@@ -14,24 +14,29 @@ export default new Vuex.Store({
   mutations: {
     setCurrencyData(state, payload) {
         state.currencyList = { ...payload };
-        console.log('mutation ', state.data );
+        console.log('mutation ', state );
       }
   },
   actions: {
-      getCurrencies({ commit, state }) {
-
-        console.log('addpromotion', state, ' ' ,apis.coins );
-        
-          return axios.get(apis.coins.path, {
-              headers: {
-                'X-CoinAPI-Key': apis.coins.key              }
-              })
-               .then(response => {
-                let data = (response && response.data ) ? { ...response.data } : {};
-                console.log('commit -> setCurrencyData response ', response , ' data -> ',data );
-                commit('setCurrencyData', data );
-            });
+    // try catch
+      getCurrencies({ commit }) {
+        return axios.get(apis.coins.path, {
+            headers: {
+              'X-CoinAPI-Key': apis.coins.key              }
+            })
+              .then(response => {
+                console.log('axios returned');
+              let data = (response && response.data ) ? { ...response.data } : {};
+              commit('setCurrencyData', data );
+          });
       }
+  },
+  getters: {
+    getCurrencyById: (state) => (id) => {
+      for (let key of Object.keys(state.currencyList)) {
+        let mealName = state.currencyList[key];
+        if(mealName.exchange_id == id) { return mealName }
+      }
+    }
   }
-  
 })

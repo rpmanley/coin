@@ -8,8 +8,15 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  created() {
-    store.dispatch('getCurrencies');
+  async beforeCreate() {
+    await store.dispatch('getCurrencies')
+    .then(() => {
+      console.log('*** re-write this ***');
+      this.$mount('#app')
+    })
+    .catch((error) => {
+      console.log('*** STHG WENNT WRONG *** ', error);
+    });
   },
   render: h => h(App)
-}).$mount('#app')
+})
