@@ -8,17 +8,9 @@ Vue.config.productionTip = false
 new Vue({
   router,
   store,
-  created() {
-     store.dispatch('getCurrencies');
+  async beforeCreate() {
+    await store.dispatch('getData')
+    this.$mount('#app')
   },
-  // async beforeCreate() {
-  //   store.dispatch('getCurrencies');
-  //   this.ready = true
-  // },
-  render (h) {
-  //   console.log('is APP ready ', this.ready );
-  //    if (this.ready) {
-        return h(App)
-  //    }
-  }
-}).$mount('#app')
+  render: h => h(App)
+})

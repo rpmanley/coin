@@ -1,10 +1,8 @@
 <template>
   <div id="app">
-    <Header>hed</Header>
-    <div id="nav">
-      <router-link to="/">Home</router-link>
-    </div>
-    <div class="content">
+    <Header />
+    <Navigation />
+    <div class="content-wrapper">
       <router-view/>
     </div>
   </div>
@@ -12,10 +10,12 @@
 
 <script>
 import Header from '@/components/Header.vue'
+import Navigation from '@/components/Navigation.vue'
 
 export default {
   components: {
-    Header
+    Header,
+    Navigation
   }
 }
 </script>
@@ -33,21 +33,7 @@ body {
   margin: 0;
 }
 
-#nav {
-  display: flex;
-  background: #42b983;
-  padding: 10px 30px;
-
-  a {
-    font-weight: bold;
-    color: white;
-
-    &.router-link-exact-active {
-      color: white;
-    }
-  }
-}
-.content {
+.content-wrapper {
   padding: 20px 30px;
 }
 </style>
