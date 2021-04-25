@@ -9,7 +9,8 @@ export default new Vuex.Store({
   state: {
     currencyList: {},
     recordLimit: 20,
-    icons: null
+    icons: null,
+    isError: false
   },
   mutations: {
     setCurrencyData(state, payload) {
@@ -17,11 +18,14 @@ export default new Vuex.Store({
     },
     setIcons(state, payload) {
       state.icons = { ...payload };
+    },
+    updateError(state, payload) {
+      state.isError = { ...payload };
     }
   },
   actions: {
       getCurrencies({ commit, state }) { 
-          axios({
+        axios({
             method: 'get',
             url: apis.coins.exchange.path,
             headers: {
@@ -36,7 +40,11 @@ export default new Vuex.Store({
                           .reverse();             
 
                commit('setCurrencyData', sorted );
-          });
+          })
+          .catch (error => {
+            console.log('There was an error', error );
+            commit('updateError', true );
+          })
       },
       getIcons({commit}) { 
         console.log('state ' , ' ',apis.coins.exchange.symbol );
@@ -99,9 +107,7 @@ export default new Vuex.Store({
     getIconById: (state) => (id) => {
       for (let key of Object.keys(state.icons)) {
         let currency = state.icons[key];
-
         if(currency.exchange_id == id) { 
-          console.log('STORE getIconById ', currency );
           return currency.url 
         }
       }
