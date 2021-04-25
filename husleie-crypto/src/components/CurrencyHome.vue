@@ -25,12 +25,20 @@ export default {
 
 <style scoped lang="scss">
 
+$large: 768px;
+
 .currency-list {
 
   list-style-type: none;
   padding: 0;
   display: flex;
   flex-direction: column;
-  
+
+  @media screen and (min-width: $large) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px 25px;
+  }
 }
+
 </style>
